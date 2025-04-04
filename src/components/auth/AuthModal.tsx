@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,46 +14,16 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent, action: "login" | "signup") => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      if (action === "login") {
-        toast({
-          title: "Logged in successfully",
-          description: "Welcome back to NeonRift",
-        });
-      } else {
-        toast({
-          title: "Account created successfully",
-          description: "Welcome to NeonRift",
-        });
-      }
-      onClose();
-    }, 1500);
-  };
-
-  const handleOAuthLogin = (provider: string) => {
-    setIsLoading(true);
-    
-    // Simulate OAuth flow
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: `Logged in with ${provider}`,
-        description: "Welcome to NeonRift",
-      });
-      onClose();
-    }, 1500);
+  const handleRedirectToLogin = () => {
+    onClose();
+    navigate("/login");
   };
 
   return (
@@ -92,222 +63,23 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 <p className="text-gray-400 mt-1">Connect to the NeonRift platform</p>
               </div>
               
-              {/* Tabs */}
-              <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid grid-cols-2 mb-4 px-6">
-                  <TabsTrigger value="login" className="data-[state=active]:neon-text-blue">Login</TabsTrigger>
-                  <TabsTrigger value="signup" className="data-[state=active]:neon-text-purple">Signup</TabsTrigger>
-                </TabsList>
+              {/* Content */}
+              <div className="p-6">
+                <p className="text-center text-gray-300 mb-6">
+                  To access all features of NeonRift, please sign in to your account
+                </p>
                 
-                {/* Login Tab */}
-                <TabsContent value="login" className="px-6 pb-6">
-                  <form onSubmit={(e) => handleSubmit(e, "login")}>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                          <Mail size={16} />
-                          <span>Email</span>
-                        </label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="your@email.com"
-                          className="bg-cyber-dark border-cyber-blue/30 focus:border-cyber-blue-neon focus:shadow-neon-blue"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <label htmlFor="password" className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                          <Lock size={16} />
-                          <span>Password</span>
-                        </label>
-                        <Input
-                          id="password"
-                          type="password"
-                          placeholder="••••••••"
-                          className="bg-cyber-dark border-cyber-blue/30 focus:border-cyber-blue-neon focus:shadow-neon-blue"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            id="remember"
-                            className="rounded border-gray-600 bg-cyber-dark text-cyber-blue focus:ring-cyber-blue"
-                          />
-                          <label htmlFor="remember" className="text-sm text-gray-400">
-                            Remember me
-                          </label>
-                        </div>
-                        <a href="#" className="text-sm text-cyber-blue hover:text-cyber-blue-neon">
-                          Forgot password?
-                        </a>
-                      </div>
-                      
-                      <Button
-                        type="submit"
-                        className="w-full bg-cyber-blue hover:bg-cyber-blue-dark"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? "Connecting..." : "Login to Account"}
-                      </Button>
-                    </div>
-                  </form>
-                  
-                  <div className="relative my-6">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-600"></div>
-                    </div>
-                    <div className="relative flex justify-center text-xs">
-                      <span className="px-2 bg-cyber-dark text-gray-400">or continue with</span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => handleOAuthLogin("Google")}
-                      className="neon-button flex items-center justify-center"
-                      disabled={isLoading}
-                    >
-                      <span>G</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => handleOAuthLogin("Discord")}
-                      className="neon-button flex items-center justify-center"
-                      disabled={isLoading}
-                    >
-                      <span>D</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => handleOAuthLogin("GitHub")}
-                      className="neon-button flex items-center justify-center"
-                      disabled={isLoading}
-                    >
-                      <Github size={18} />
-                    </Button>
-                  </div>
-                </TabsContent>
+                <Button
+                  onClick={handleRedirectToLogin}
+                  className="w-full bg-cyber-blue hover:bg-cyber-blue-dark text-white shadow-lg hover:shadow-neon-blue transition-all duration-300 mb-4"
+                >
+                  Go to Login Page
+                </Button>
                 
-                {/* Signup Tab */}
-                <TabsContent value="signup" className="px-6 pb-6">
-                  <form onSubmit={(e) => handleSubmit(e, "signup")}>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label htmlFor="signup-email" className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                          <Mail size={16} />
-                          <span>Email</span>
-                        </label>
-                        <Input
-                          id="signup-email"
-                          type="email"
-                          placeholder="your@email.com"
-                          className="bg-cyber-dark border-cyber-purple/30 focus:border-cyber-purple focus:shadow-neon-purple"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <label htmlFor="signup-password" className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                          <Lock size={16} />
-                          <span>Password</span>
-                        </label>
-                        <Input
-                          id="signup-password"
-                          type="password"
-                          placeholder="••••••••"
-                          className="bg-cyber-dark border-cyber-purple/30 focus:border-cyber-purple focus:shadow-neon-purple"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="flex items-start space-x-2">
-                        <div className="flex items-center h-5">
-                          <input
-                            id="terms"
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-gray-600 bg-cyber-dark text-cyber-purple focus:ring-cyber-purple"
-                            required
-                          />
-                        </div>
-                        <label htmlFor="terms" className="text-sm text-gray-400">
-                          I agree to the{" "}
-                          <a href="#" className="text-cyber-purple hover:text-cyber-purple-light">
-                            Terms of Service
-                          </a>{" "}
-                          and{" "}
-                          <a href="#" className="text-cyber-purple hover:text-cyber-purple-light">
-                            Privacy Policy
-                          </a>
-                        </label>
-                      </div>
-                      
-                      <Button
-                        type="submit"
-                        className="w-full bg-cyber-purple hover:bg-cyber-purple-dark"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? "Creating Account..." : "Create Account"}
-                      </Button>
-                    </div>
-                  </form>
-                  
-                  <div className="relative my-6">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-600"></div>
-                    </div>
-                    <div className="relative flex justify-center text-xs">
-                      <span className="px-2 bg-cyber-dark text-gray-400">or signup with</span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => handleOAuthLogin("Google")}
-                      className="neon-button flex items-center justify-center"
-                      disabled={isLoading}
-                    >
-                      <span>G</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => handleOAuthLogin("Discord")}
-                      className="neon-button flex items-center justify-center"
-                      disabled={isLoading}
-                    >
-                      <span>D</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => handleOAuthLogin("GitHub")}
-                      className="neon-button flex items-center justify-center"
-                      disabled={isLoading}
-                    >
-                      <Github size={18} />
-                    </Button>
-                  </div>
-                </TabsContent>
-              </Tabs>
+                <p className="text-center text-gray-400 text-sm">
+                  Don't have an account yet? You can register on the login page.
+                </p>
+              </div>
             </div>
           </motion.div>
         </>
