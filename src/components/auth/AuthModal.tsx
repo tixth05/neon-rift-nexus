@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { X, Mail, Lock, AlertCircle, Github, Google, Discord } from "lucide-react";
+import { X, Mail, Lock, AlertCircle, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -178,7 +178,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                       className="neon-button flex items-center justify-center"
                       disabled={isLoading}
                     >
-                      <Google size={18} />
+                      <span>G</span>
                     </Button>
                     <Button
                       type="button"
@@ -187,7 +187,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                       className="neon-button flex items-center justify-center"
                       disabled={isLoading}
                     >
-                      <Discord size={18} />
+                      <span>D</span>
                     </Button>
                     <Button
                       type="button"
@@ -285,7 +285,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                       className="neon-button flex items-center justify-center"
                       disabled={isLoading}
                     >
-                      <Google size={18} />
+                      <span>G</span>
                     </Button>
                     <Button
                       type="button"
@@ -294,7 +294,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                       className="neon-button flex items-center justify-center"
                       disabled={isLoading}
                     >
-                      <Discord size={18} />
+                      <span>D</span>
                     </Button>
                     <Button
                       type="button"
